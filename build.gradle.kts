@@ -42,7 +42,7 @@ dependencies {
 
 group = "me.reckter"
 version = "1.0-SNAPSHOT"
-description = "aoc2023"
+description = "aoc2024"
 
 tasks.test {
     minHeapSize = "1024m" // initial heap size
