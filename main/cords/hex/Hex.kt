@@ -5,7 +5,9 @@ data class Hex(
     val y: Int,
     val z: Int,
 ) {
-    enum class Direction(val direction: Hex) {
+    enum class Direction(
+        val direction: Hex,
+    ) {
         NorthEast(Hex(1, 0, -1)),
         East(Hex(+1, -1, 0)),
         SouthEast(Hex(0, -1, +1)),
@@ -15,14 +17,11 @@ data class Hex(
     }
 }
 
-operator fun Hex.plus(other: Hex): Hex {
-    return Hex(
+operator fun Hex.plus(other: Hex): Hex =
+    Hex(
         this.x + other.x,
         this.y + other.y,
         this.z + other.z,
     )
-}
 
-fun Hex.getNeighbors(): List<Hex> {
-    return Hex.Direction.values().map { this + it.direction }
-}
+fun Hex.getNeighbors(): List<Hex> = Hex.Direction.values().map { this + it.direction }

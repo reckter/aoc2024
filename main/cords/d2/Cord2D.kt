@@ -17,24 +17,22 @@ fun Cord2D<Int>.modulo(other: Cord2D<Int>): Cord2D<Int> {
     val x = this.x % other.x
     val y = this.y % other.y
     return Cord2D(
-        if(x < 0) x + other.x else x,
-        if(y < 0) y + other.y else y,
+        if (x < 0) x + other.x else x,
+        if (y < 0) y + other.y else y,
     )
 }
 
-operator fun Cord2D<Int>.plus(other: Cord2D<Int>): Cord2D<Int> {
-    return Cord2D(
+operator fun Cord2D<Int>.plus(other: Cord2D<Int>): Cord2D<Int> =
+    Cord2D(
         this.x + other.x,
         this.y + other.y,
     )
-}
 
-operator fun Cord2D<Int>.minus(other: Cord2D<Int>): Cord2D<Int> {
-    return Cord2D(
+operator fun Cord2D<Int>.minus(other: Cord2D<Int>): Cord2D<Int> =
+    Cord2D(
         this.x - other.x,
         this.y - other.y,
     )
-}
 
 fun Cord2D<Int>.getNeighbors(noEdges: Boolean = false): List<Cord2D<Int>> {
     if (noEdges) {
@@ -43,18 +41,17 @@ fun Cord2D<Int>.getNeighbors(noEdges: Boolean = false): List<Cord2D<Int>> {
             0 to 1,
             -1 to 0,
             1 to 0,
-        )
-            .map {
-                this + Cord2D(it.first, it.second)
-            }
-    }
-
-    return (-1..1).flatMap { xOffset ->
-        (-1..1).map { yOffset ->
-            this + Cord2D(xOffset, yOffset)
+        ).map {
+            this + Cord2D(it.first, it.second)
         }
     }
-        .filter { it != this }
+
+    return (-1..1)
+        .flatMap { xOffset ->
+            (-1..1).map { yOffset ->
+                this + Cord2D(xOffset, yOffset)
+            }
+        }.filter { it != this }
 }
 
 fun Cord2D<Int>.lineTo(end: Cord2D<Int>): List<Cord2D<Int>> {
@@ -74,6 +71,4 @@ fun Cord2D<Int>.lineTo(end: Cord2D<Int>): List<Cord2D<Int>> {
     return result
 }
 
-fun Cord2D<Int>.manhattenDistance(to: Cord2D<Int>): Int {
-    return Math.abs(this.x - to.x) + Math.abs(this.y - to.y)
-}
+fun Cord2D<Int>.manhattenDistance(to: Cord2D<Int>): Int = Math.abs(this.x - to.x) + Math.abs(this.y - to.y)

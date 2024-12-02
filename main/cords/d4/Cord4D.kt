@@ -7,19 +7,17 @@ data class Cord4D<T : Number>(
     val w: T,
 )
 
-operator fun Cord4D<Int>.plus(other: Cord4D<Int>): Cord4D<Int> {
-    return Cord4D(this.x + other.x, this.y + other.y, this.z + other.z, this.w + other.w)
-}
+operator fun Cord4D<Int>.plus(other: Cord4D<Int>): Cord4D<Int> =
+    Cord4D(this.x + other.x, this.y + other.y, this.z + other.z, this.w + other.w)
 
-fun Cord4D<Int>.getNeighbors(): List<Cord4D<Int>> {
-    return (-1..1).flatMap { xOffset ->
-        (-1..1).flatMap { yOffset ->
-            (-1..1).flatMap { zOffset ->
-                (-1..1).map { wOffset ->
-                    this + Cord4D(xOffset, yOffset, zOffset, wOffset)
+fun Cord4D<Int>.getNeighbors(): List<Cord4D<Int>> =
+    (-1..1)
+        .flatMap { xOffset ->
+            (-1..1).flatMap { yOffset ->
+                (-1..1).flatMap { zOffset ->
+                    (-1..1).map { wOffset ->
+                        this + Cord4D(xOffset, yOffset, zOffset, wOffset)
+                    }
                 }
             }
-        }
-    }
-        .filter { it != this }
-}
+        }.filter { it != this }

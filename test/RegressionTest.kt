@@ -25,7 +25,8 @@ class RegressionTest {
         val days =
             run {
                 val reflections = Reflections("me.reckter")
-                reflections.getSubTypesOf(Day::class.java)
+                reflections
+                    .getSubTypesOf(Day::class.java)
                     .toSet()
                     .sortedBy { it.simpleName.removePrefix("Day").toInt() }
             }

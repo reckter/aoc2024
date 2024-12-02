@@ -9,7 +9,8 @@ class AllCombinationsTest {
         val start = listOf(1, 2, 3)
 
         val combis =
-            start.allPairings()
+            start
+                .allPairings()
                 .toList()
         assertTrue {
             combis ==
@@ -29,7 +30,8 @@ class AllCombinationsTest {
         val start = listOf(1, 2, 3)
 
         val combis =
-            start.allPairings(includeSelf = true)
+            start
+                .allPairings(includeSelf = true)
                 .toList()
 
         assertTrue {
@@ -53,7 +55,8 @@ class AllCombinationsTest {
         val start = listOf(1, 2, 3)
 
         val combis =
-            start.allPairings(includeSelf = true, bothDirections = false)
+            start
+                .allPairings(includeSelf = true, bothDirections = false)
                 .toList()
 
         assertTrue {
@@ -74,7 +77,8 @@ class AllCombinationsTest {
         val start = listOf(1, 2, 3)
 
         val combis =
-            start.allPairings(bothDirections = false)
+            start
+                .allPairings(bothDirections = false)
                 .toList()
 
         assertTrue {

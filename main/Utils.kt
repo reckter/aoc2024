@@ -23,9 +23,7 @@ object Context {
     var overwritingSolutions: Boolean = false
     var testMode: Boolean = false
 
-    override fun toString(): String {
-        return "Day: $day\nTestMode: $testMode\nOverwriteSolutions: $overwritingSolutions"
-    }
+    override fun toString(): String = "Day: $day\nTestMode: $testMode\nOverwriteSolutions: $overwritingSolutions"
 }
 
 fun saveSolution(
@@ -107,14 +105,16 @@ fun <T : Day> timed(clazz: Class<T>) {
     val times = 1_000
     val warmup = 1_00
     val partOneNanos =
-        (0..times).map {
-            measureNanoTime { day.solvePart1() }
-        }.drop(warmup)
+        (0..times)
+            .map {
+                measureNanoTime { day.solvePart1() }
+            }.drop(warmup)
 
     val partTwoNanos =
-        (0..times).map {
-            measureNanoTime { day.solvePart2() }
-        }.drop(warmup)
+        (0..times)
+            .map {
+                measureNanoTime { day.solvePart2() }
+            }.drop(warmup)
 
     println()
     times.print("measurements: ")
@@ -135,9 +135,7 @@ inline fun <reified T : Day> time() {
     timed<T>(T::class.java)
 }
 
-fun readLines(file: String): List<String> {
-    return Files.readAllLines(File(file).toPath())
-}
+fun readLines(file: String): List<String> = Files.readAllLines(File(file).toPath())
 
 fun List<String>.toIntegers(): List<Int> = this.map { it.toInt() }
 
@@ -165,8 +163,7 @@ fun <E> List<String>.matchWithRegexAndParse(vararg matchers: Pair<Regex, (MatchR
                 .mapNotNull { (regex, parser) ->
                     val match = regex.matchEntire(line)
                     match?.destructured?.to(parser)
-                }
-                .map { (match, parser) -> parser(match) }
+                }.map { (match, parser) -> parser(match) }
                 .first()
         }
 
@@ -192,30 +189,35 @@ fun <T> T.solution(part: Int) {
     }
 }
 
-fun <E, F> Sequence<E>.allPairings(with: Iterable<F>): Sequence<Pair<E, F>> {
-    return this
+fun <E, F> Sequence<E>.allPairings(with: Iterable<F>): Sequence<Pair<E, F>> =
+    this
         .flatMap { first ->
             with
                 .asSequence()
                 .map { first to it }
         }
-}
 
-fun <E, F> Iterable<E>.allPairings(with: Iterable<F>): Sequence<Pair<E, F>> {
-    return this
+fun <E, F> Iterable<E>.allPairings(with: Iterable<F>): Sequence<Pair<E, F>> =
+    this
         .asSequence()
         .flatMap { first ->
             with
                 .asSequence()
                 .map { first to it }
         }
-}
+
+fun <E> List<E>.leaveOutOne(): Sequence<List<E>> =
+    this
+        .asSequence()
+        .mapIndexed { index, e ->
+            this.take(index) + this.drop(index + 1)
+        }
 
 fun <E> List<E>.allPairings(
     includeSelf: Boolean = false,
     bothDirections: Boolean = true,
-): Sequence<Pair<E, E>> {
-    return this
+): Sequence<Pair<E, E>> =
+    this
         .asSequence()
         .mapIndexed { index, it ->
             val others =
@@ -232,9 +234,7 @@ fun <E> List<E>.allPairings(
                     null
                 }
             }
-        }
-        .flatten()
-}
+        }.flatten()
 
 fun <E> List<E>.allCombinations(): Sequence<List<E>> {
     if (this.isEmpty()) return sequenceOf(this)
@@ -253,7 +253,8 @@ fun <E> List<E>.allCombinations(): Sequence<List<E>> {
 fun <E> List<E>.permutations(): Sequence<List<E>> {
     if (this.size <= 1) return sequenceOf(this)
     val insertInto =
-        this.drop(1)
+        this
+            .drop(1)
             .permutations()
 
     return insertInto
@@ -261,8 +262,7 @@ fun <E> List<E>.permutations(): Sequence<List<E>> {
             (
                 list.indices +
                     list.size
-            )
-                .asSequence()
+            ).asSequence()
                 .map { list.take(it) + this.first() + list.drop(it) }
         }
 }
@@ -272,82 +272,68 @@ fun <Node> dijkstraBigDecimal(
     end: Node,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> BigDecimal,
-): Pair<List<Node>, BigDecimal> {
-    return dijkstraBigDecimal(
+): Pair<List<Node>, BigDecimal> =
+    dijkstraBigDecimal(
         start,
         isEnd = { it == end },
         getNeighbors,
         getWeightBetweenNodes,
     )
-}
 
 fun <Node> dijkstraBigDecimal(
     start: Node,
     isEnd: (it: Node) -> Boolean,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> BigDecimal,
-): Pair<List<Node>, BigDecimal> {
-    return dijkstra(start, isEnd, 0.toBigDecimal(), BigDecimal::plus, getNeighbors, getWeightBetweenNodes)
-}
+): Pair<List<Node>, BigDecimal> = dijkstra(start, isEnd, 0.toBigDecimal(), BigDecimal::plus, getNeighbors, getWeightBetweenNodes)
 
 fun <Node> dijkstraDouble(
     start: Node,
     isEnd: (it: Node) -> Boolean,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Double,
-): Pair<List<Node>, Double> {
-    return dijkstra(start, isEnd, 0.0, Double::plus, getNeighbors, getWeightBetweenNodes)
-}
+): Pair<List<Node>, Double> = dijkstra(start, isEnd, 0.0, Double::plus, getNeighbors, getWeightBetweenNodes)
 
 fun <Node> dijkstraDouble(
     start: Node,
     end: Node,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Double,
-): Pair<List<Node>, Double> {
-    return dijkstraDouble(
+): Pair<List<Node>, Double> =
+    dijkstraDouble(
         start,
         isEnd = { it == end },
         getNeighbors,
         getWeightBetweenNodes,
     )
-}
 
 fun <Node> dijkstraInt(
     start: Node,
     end: Node,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Int,
-): Pair<List<Node>, Int> {
-    return dijkstraInt(start, isEnd = { it == end }, getNeighbors, getWeightBetweenNodes)
-}
+): Pair<List<Node>, Int> = dijkstraInt(start, isEnd = { it == end }, getNeighbors, getWeightBetweenNodes)
 
 fun <Node> dijkstraInt(
     start: Node,
     isEnd: (it: Node) -> Boolean,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Int,
-): Pair<List<Node>, Int> {
-    return dijkstra(start, isEnd, 0, Int::plus, getNeighbors, getWeightBetweenNodes)
-}
+): Pair<List<Node>, Int> = dijkstra(start, isEnd, 0, Int::plus, getNeighbors, getWeightBetweenNodes)
 
 fun <Node> dijkstraLong(
     start: Node,
     end: Node,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Long,
-): Pair<List<Node>, Long> {
-    return dijkstraLong(start, isEnd = { it == end }, getNeighbors, getWeightBetweenNodes)
-}
+): Pair<List<Node>, Long> = dijkstraLong(start, isEnd = { it == end }, getNeighbors, getWeightBetweenNodes)
 
 fun <Node> dijkstraLong(
     start: Node,
     isEnd: (it: Node) -> Boolean,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Long,
-): Pair<List<Node>, Long> {
-    return dijkstra(start, isEnd, 0L, Long::plus, getNeighbors, getWeightBetweenNodes)
-}
+): Pair<List<Node>, Long> = dijkstra(start, isEnd, 0L, Long::plus, getNeighbors, getWeightBetweenNodes)
 
 fun <Node, Weight> dijkstra(
     start: Node,
@@ -387,7 +373,8 @@ fun <Node, Weight> dijkstra(
 fun hammingDistance(
     a: String,
     b: String,
-) = a.zip(b)
+) = a
+    .zip(b)
     .count { (a, b) -> a != b } +
     a.length - b.length
 
@@ -415,11 +402,11 @@ fun Int.digits() = this.toString().map { it.toString().toInt() }
 
 fun Long.digits() = this.toString().map { it.toString().toInt() }
 
-fun List<Int>.toLong(): Long {
-    return this.reversed()
+fun List<Int>.toLong(): Long =
+    this
+        .reversed()
         .mapIndexed { index, it -> it * 10.0.pow(index).toLong() }
         .sum()
-}
 
 fun <E> List<E>.replace(
     index: Int,
@@ -442,7 +429,8 @@ fun List<Int>.asRange(): IntRange {
 }
 
 fun <T> List<T>.commonPrefix(with: List<T>): List<T> =
-    this.zip(with)
+    this
+        .zip(with)
         .takeWhile { (a, b) -> a == b }
         .map { (a, _) -> a }
 
@@ -459,18 +447,15 @@ fun <E> List<E>.padStart(
 
 fun <E> E.repeatToSequence(times: Int) = this.repeatToSequence(times.toLong())
 
-fun <E> E.repeatToSequence(times: Long): Sequence<E> {
-    return (0 until times)
+fun <E> E.repeatToSequence(times: Long): Sequence<E> =
+    (0 until times)
         .asSequence()
         .map { this }
-}
 
-fun Iterable<String>.splitAtEmptyLine(): Iterable<Iterable<String>> {
-    return this.splitAt { it == "" }
-}
+fun Iterable<String>.splitAtEmptyLine(): Iterable<Iterable<String>> = this.splitAt { it == "" }
 
-fun <T> Iterable<T>.splitBeforeEach(predicate: (T) -> Boolean): Iterable<Iterable<T>> {
-    return this.fold(mutableListOf(mutableListOf<T>())) { lists, element ->
+fun <T> Iterable<T>.splitBeforeEach(predicate: (T) -> Boolean): Iterable<Iterable<T>> =
+    this.fold(mutableListOf(mutableListOf<T>())) { lists, element ->
         if (predicate(element)) {
             lists.add(mutableListOf(element))
         } else {
@@ -478,10 +463,9 @@ fun <T> Iterable<T>.splitBeforeEach(predicate: (T) -> Boolean): Iterable<Iterabl
         }
         lists
     }
-}
 
-fun <T> Iterable<T>.splitAt(predicate: (T) -> Boolean): Iterable<Iterable<T>> {
-    return this.fold(mutableListOf(mutableListOf<T>())) { lists, element ->
+fun <T> Iterable<T>.splitAt(predicate: (T) -> Boolean): Iterable<Iterable<T>> =
+    this.fold(mutableListOf(mutableListOf<T>())) { lists, element ->
         if (predicate(element)) {
             lists.add(mutableListOf())
         } else {
@@ -489,23 +473,15 @@ fun <T> Iterable<T>.splitAt(predicate: (T) -> Boolean): Iterable<Iterable<T>> {
         }
         lists
     }
-}
 
-fun <T> List<T>.runsOfLength(length: Int): List<List<T>> {
-    return this.mapIndexed { index, _ -> (this.drop(index) + this.takeLast(index)).take(length) }
-}
+fun <T> List<T>.runsOfLength(length: Int): List<List<T>> =
+    this.mapIndexed { index, _ -> (this.drop(index) + this.takeLast(index)).take(length) }
 
-fun <T> List<T>.rotateRight(by: Int = 1): List<T> {
-    return this.takeLast(by % this.size) + this.dropLast(by % this.size)
-}
+fun <T> List<T>.rotateRight(by: Int = 1): List<T> = this.takeLast(by % this.size) + this.dropLast(by % this.size)
 
-fun <T> List<T>.rotateLeft(by: Int = 1): List<T> {
-    return this.drop(by % this.size) + this.take(by % this.size)
-}
+fun <T> List<T>.rotateLeft(by: Int = 1): List<T> = this.drop(by % this.size) + this.take(by % this.size)
 
-fun <T> List<List<T>>.swapDimensions(): List<List<T>> {
-    return this.first().indices.map { index -> this.map { it[index] } }
-}
+fun <T> List<List<T>>.swapDimensions(): List<List<T>> = this.first().indices.map { index -> this.map { it[index] } }
 
 // from https://rosettacode.org/wiki/Least_common_multiple#Kotlin
 fun gcd(
@@ -575,41 +551,33 @@ fun <E> List<E>.nullIfEmpty(): List<E>? {
     return this
 }
 
-fun <E> List<String>.parseMap(parse: (Char) -> E): Map<Cord2D<Int>, E> {
-    return this
+fun <E> List<String>.parseMap(parse: (Char) -> E): Map<Cord2D<Int>, E> =
+    this
         .mapIndexed { y, line ->
             line
                 .mapIndexed { x, char ->
                     Cord2D(x, y) to parse(char)
                 }
-        }
-        .flatten()
+        }.flatten()
         .toMap()
-}
 
-fun <A1, R> memoize(
-    f: (A1) -> R,
-): (A1) -> R {
+fun <A1, R> memoize(f: (A1) -> R): (A1) -> R {
     val cache = mutableMapOf<A1, R>()
     return { a1 ->
         cache.getOrPut(a1) { f(a1) }
     }
 }
 
-fun <A1, A2, R> memoize(
-    f: (A1, A2) -> R,
-): (A1, A2) -> R {
+fun <A1, A2, R> memoize(f: (A1, A2) -> R): (A1, A2) -> R {
     val cache = mutableMapOf<Pair<A1, A2>, R>()
     return { a1, a2 ->
         cache.getOrPut(a1 to a2) { f(a1, a2) }
     }
 }
 
-fun <A1, A2, A3, R> memoize(
-    f: (A1, A2, A3) -> R,
-): (A1, A2, A3) -> R {
+fun <A1, A2, A3, R> memoize(f: (A1, A2, A3) -> R): (A1, A2, A3) -> R {
     val cache = mutableMapOf<Triple<A1, A2, A3>, R>()
-    return { a1, a2, a3->
+    return { a1, a2, a3 ->
         cache.getOrPut(Triple(a1, a2, a3)) { f(a1, a2, a3) }
     }
 }

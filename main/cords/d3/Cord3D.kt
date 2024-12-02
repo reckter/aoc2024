@@ -12,13 +12,12 @@ data class Cord3D<T : Number>(
     val z: T,
 )
 
-operator fun Cord3D<Int>.plus(other: Cord3D<Int>): Cord3D<Int> {
-    return Cord3D(
+operator fun Cord3D<Int>.plus(other: Cord3D<Int>): Cord3D<Int> =
+    Cord3D(
         this.x + other.x,
         this.y + other.y,
         this.z + other.z,
     )
-}
 
 fun Cord3D<Int>.getNeighbors(noEdges: Boolean = false): List<Cord3D<Int>> {
     if (noEdges) {
@@ -29,22 +28,19 @@ fun Cord3D<Int>.getNeighbors(noEdges: Boolean = false): List<Cord3D<Int>> {
             Cord3D(0, 1, 0),
             Cord3D(-1, 0, 0),
             Cord3D(1, 0, 0),
-        )
-            .map {
-                this + it
-            }
-    }
-
-    return (-1..1).flatMap { xOffset ->
-        (-1..1).flatMap { yOffset ->
-            (-1..1).map { zOffset ->
-                this + Cord3D(xOffset, yOffset, zOffset)
-            }
+        ).map {
+            this + it
         }
     }
-        .filter { it != this }
+
+    return (-1..1)
+        .flatMap { xOffset ->
+            (-1..1).flatMap { yOffset ->
+                (-1..1).map { zOffset ->
+                    this + Cord3D(xOffset, yOffset, zOffset)
+                }
+            }
+        }.filter { it != this }
 }
 
-fun Cord3D<Int>.manhattenDistance(to: Cord3D<Int>): Int {
-    return abs(this.x - to.x) + abs(this.y - to.y) + abs(this.z - to.z)
-}
+fun Cord3D<Int>.manhattenDistance(to: Cord3D<Int>): Int = abs(this.x - to.x) + abs(this.y - to.y) + abs(this.z - to.z)
