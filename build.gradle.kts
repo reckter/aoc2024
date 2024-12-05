@@ -5,8 +5,9 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.9.21"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+    kotlin("jvm") version "2.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 repositories {
@@ -29,13 +30,13 @@ sourceSets {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.reflections:reflections:0.10.2")
     implementation("com.squareup.okhttp3:okhttp:4.9.2")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
 //    testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 }

@@ -37,7 +37,7 @@ class Day2 : Day {
                             )
                     }
             }.count()
-            .solution(1)
+            .solution(2)
     }
 }
 

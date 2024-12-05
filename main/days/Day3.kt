@@ -33,7 +33,7 @@ class Day3 : Day {
             .findAll(str)
             .map { match -> match.groupValues[1].toInt() * match.groupValues[2].toInt() }
             .sum()
-            .solution(1)
+            .solution(2)
     }
 }
 
