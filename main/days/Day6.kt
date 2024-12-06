@@ -7,6 +7,7 @@ import me.reckter.aoc.days.Day6.Direction.Top
 import me.reckter.aoc.parseMap
 import me.reckter.aoc.solution
 import me.reckter.aoc.solve
+import kotlin.streams.asStream
 
 class Day6 : Day {
     override val day = 6
@@ -95,11 +96,15 @@ class Day6 : Day {
             map.walkStep(pos, direction)
         }.map { it.first }
             .distinct()
+            .asStream()
+            .parallel()
             .filter { it != startPosition }
-            .count {
+            .filter {
                 val newMap = (map + (it to Tile.Obstacle))
                 newMap.hasLoop(startPosition, Top)
-            }.solution(2)
+            }
+            .count()
+            .solution(2)
     }
 }
 
