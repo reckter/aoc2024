@@ -91,12 +91,6 @@ class Day6 : Day {
     }
 
     override fun solvePart2() {
-        val path =
-            generateSequence(startPosition to Direction.Top) { (pos, direction) ->
-                map.walkStep(pos, direction)
-            }.map { it.first }
-                .toSet()
-
         generateSequence(startPosition to Direction.Top) { (pos, direction) ->
             map.walkStep(pos, direction)
         }.map { it.first }
