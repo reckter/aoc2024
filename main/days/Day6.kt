@@ -4,6 +4,7 @@ import me.reckter.aoc.Day
 import me.reckter.aoc.cords.d2.Cord2D
 import me.reckter.aoc.cords.d2.plus
 import me.reckter.aoc.days.Day6.Direction.Top
+import me.reckter.aoc.days.Day6.Tile.Free
 import me.reckter.aoc.parseMap
 import me.reckter.aoc.solution
 import me.reckter.aoc.solve
@@ -102,8 +103,7 @@ class Day6 : Day {
             .filter {
                 val newMap = (map + (it to Tile.Obstacle))
                 newMap.hasLoop(startPosition, Top)
-            }
-            .count()
+            }.count()
             .solution(2)
     }
 }
