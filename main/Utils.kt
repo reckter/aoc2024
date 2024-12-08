@@ -105,13 +105,13 @@ fun <T : Day> timed(clazz: Class<T>) {
     val times = 1_000
     val warmup = 1_00
     val partOneNanos =
-        (0..times)
+        (0..times + warmup)
             .map {
                 measureNanoTime { day.solvePart1() }
             }.drop(warmup)
 
     val partTwoNanos =
-        (0..times)
+        (0..times + warmup)
             .map {
                 measureNanoTime { day.solvePart2() }
             }.drop(warmup)
