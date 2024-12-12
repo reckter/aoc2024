@@ -77,7 +77,6 @@ class Day12 : Day {
 
     data class Side(
         val direction: Direction,
-        // sort by direction?
         val positions: Set<Cord2D<Int>>,
     ) {
         fun canMergeWith(other: Side): Boolean {
@@ -106,28 +105,20 @@ class Day12 : Day {
             Side(Right, setOf(this)).takeIf { this + Cord2D(1, 0) !in region },
         )
 
-    fun List<Side>.merge(): List<Side> {
-        var current = this
-        var merged = mutableListOf<Side>()
-        var change = true
-        while (change) {
-            change = false
-            current@ for (cur in current) {
-                for (other in merged) {
-                    if (cur.canMergeWith(other)) {
-                        merged.remove(other)
-                        merged.add(cur.merge(other))
-                        change = true
-                        continue@current
-                    }
+    fun List<Side>.merge(): List<Side> =
+        generateSequence(this) { current ->
+            current.fold(emptyList()) { cur, side ->
+                val candidate = cur.find { it.canMergeWith(side) }
+                if (candidate == null) {
+                    cur + side
+                } else {
+                    (cur - candidate) + candidate.merge(side)
                 }
-                merged.add(cur)
             }
-            current = merged
-            merged = mutableListOf()
-        }
-        return current
-    }
+        }.zipWithNext()
+            .dropWhile { it.first.size != it.second.size }
+            .first()
+            .second
 
     override fun solvePart2() {
         map
