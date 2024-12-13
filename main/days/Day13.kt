@@ -45,6 +45,9 @@ class Day13 : Day {
         val a = (goal.x - b * buttonB.x) / buttonA.x
 
         if (a < 0 || b < 0) return null
+
+	    // If there is no real number solution, there stil will be an unreal number solution
+	    // because we use floats, these equations will no longer be true then
         if (a * buttonA.x + b * buttonB.x != goal.x) return null
         if (a * buttonA.y + b * buttonB.y != goal.y) return null
 
