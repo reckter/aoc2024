@@ -13,6 +13,7 @@ class Day10 : Day {
     fun Map<Cord2D<Int>, Int>.findTrails(current: Cord2D<Int>): List<List<Cord2D<Int>>> {
         val height = this[current] ?: return emptyList()
         if (height == 9) return listOf(listOf(current))
+
         return current
             .getNeighbors(noEdges = true)
             .filter { (this[it] ?: -1) == height + 1 }
