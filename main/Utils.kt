@@ -367,7 +367,7 @@ fun <Node, Weight> dijkstra(
                 )
             }
     }
-    error("no path  found!")
+    error("no path found!")
 }
 
 fun hammingDistance(

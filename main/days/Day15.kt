@@ -3,8 +3,6 @@ package me.reckter.aoc.days
 import me.reckter.aoc.Day
 import me.reckter.aoc.cords.d2.Cord2D
 import me.reckter.aoc.cords.d2.plus
-import me.reckter.aoc.days.Day15.Direction.Left
-import me.reckter.aoc.days.Day15.Direction.Right
 import me.reckter.aoc.days.Day15.Tile.Box
 import me.reckter.aoc.days.Day15.Tile.BoxLeft
 import me.reckter.aoc.days.Day15.Tile.BoxRight
@@ -37,7 +35,7 @@ class Day15 : Day {
 	}
 
 	val startMap by lazy {
-		loadInput( trim = false)
+		loadInput(trim = false)
 			.splitAt { it.isEmpty() }
 			.first()
 			.toList()
@@ -78,7 +76,7 @@ class Day15 : Day {
 	}
 
 	val instructions by lazy {
-		loadInput( trim = false)
+		loadInput(trim = false)
 			.splitAt { it.isEmpty() }
 			.last()
 			.joinToString("")
@@ -93,10 +91,11 @@ class Day15 : Day {
 			}
 	}
 
-	fun Map<Cord2D<Int>, Tile>.tryMove(
+	fun tryMove(
+		map: MutableMap<Cord2D<Int>, Tile>,
 		robot: Cord2D<Int>,
 		direction: Direction
-	): Pair<Cord2D<Int>, Map<Cord2D<Int>, Tile>> {
+	): Cord2D<Int> {
 		val next = robot + direction.vector
 
 		val queue = ArrayDeque<Cord2D<Int>>()
@@ -109,19 +108,19 @@ class Day15 : Day {
 			if (n in seen) continue
 
 			// we hit a wall, abort
-			if (this[n] == Wall) return robot to this
+			if (map[n] == Wall) return robot
 
-			if (this[n] !in listOf(Tile.Box, BoxRight, BoxLeft)) {
+			if (map[n] !in listOf(Box, BoxRight, BoxLeft)) {
 				// we hit empty space, nothing to do
 				continue
 			}
 
 			seen.add(n)
 
-			if (this[n] == BoxLeft) {
+			if (map[n] == BoxLeft) {
 				queue.add(n + direction.vector)
 				queue.add(n + Cord2D(1, 0))
-			} else if (this[n] == BoxRight) {
+			} else if (map[n] == BoxRight) {
 				queue.add(n + direction.vector)
 				queue.add(n + Cord2D(-1, 0))
 			} else {
@@ -129,10 +128,12 @@ class Day15 : Day {
 			}
 		}
 
-		val newMap = this - seen +
-			seen.map { (it + direction.vector) to (this[it] ?: error(" No box? at $it")) }
 
-		return next to newMap
+		val newBoxes = seen.map { it + direction.vector to(map[it] ?: error(" No box? at $it")) }
+		seen.forEach { map.remove(it) }
+		newBoxes.forEach { map.put(it.first, it.second) }
+
+		return next
 	}
 
 	override fun solvePart1() {
@@ -141,13 +142,14 @@ class Day15 : Day {
 			.single()
 			.key
 
-		val mapWithoutRobot = startMap - robot
+		val mapWithoutRobot = (startMap - robot).toMutableMap()
 
 		instructions
-			.fold(robot to mapWithoutRobot) { current, instr ->
-				current.second.tryMove(current.first, instr)
+			.fold(robot) { current, instr ->
+				tryMove(mapWithoutRobot, current, instr)
 			}
-			.second
+
+		mapWithoutRobot
 			.filter { it.value == Box }
 			.keys
 			.sumOf { it.x + it.y * 100 }
@@ -155,13 +157,13 @@ class Day15 : Day {
 	}
 
 	override fun solvePart2() {
-		val dublicateDirection = Cord2D(1,0)
+		val dublicateDirection = Cord2D(1, 0)
 		val map = startMap
 			.entries.flatMap {
 				val pos = Cord2D(it.key.x + it.key.x, it.key.y)
-				when(it.value){
+				when (it.value) {
 					Free -> listOf(pos to it.value, (pos + dublicateDirection) to it.value)
-					Box ->  listOf(pos to BoxLeft, (pos + dublicateDirection) to BoxRight)
+					Box -> listOf(pos to BoxLeft, (pos + dublicateDirection) to BoxRight)
 					BoxLeft -> TODO()
 					BoxRight -> TODO()
 					Wall -> listOf(pos to it.value, pos + dublicateDirection to it.value)
@@ -175,15 +177,16 @@ class Day15 : Day {
 			.single()
 			.key
 
-		val mapWithoutRobot = map - robot
+		val mapWithoutRobot = (map - robot).toMutableMap()
 
 		instructions
-			.fold(robot to mapWithoutRobot) { current, instr ->
-				val res = current.second.tryMove(current.first, instr)
+			.fold(robot) { current, instr ->
+				val res = tryMove(mapWithoutRobot, current, instr)
 
 				res
 			}
-			.second
+
+		mapWithoutRobot
 			.filter { it.value == BoxLeft }
 			.keys
 			.sumOf { it.x + it.y * 100 }

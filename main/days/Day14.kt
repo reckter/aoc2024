@@ -101,6 +101,7 @@ class Day14 : Day {
 					.forEach { queue.add(it) }
 			}
 			shapes.add(seen)
+			if (shapes.size > 150) return false
 			seen.forEach { map.remove(it) }
 		}
 
@@ -134,8 +135,8 @@ class Day14 : Day {
 			!map.areInOneShape()
 		}.first()
 
-		start.map { it.moveXSteps(bounds, step) }
-			.printMap(bounds)
+//		start.map { it.moveXSteps(bounds, step) }
+//			.printMap(bounds)
 
 		step
 			.solution(2)
@@ -149,9 +150,9 @@ private operator fun Cord2D<Int>.rem(bounds: Cord2D<Int>): Cord2D<Int> {
 
 	var y = (this.y) % bounds.y
 	var x = (this.x) % bounds.x
-	if(x < 0) x = x + bounds.x
-	if(y < 0) y = y + bounds.y
-	return Cord2D(x,y)
+	if (x < 0) x = x + bounds.x
+	if (y < 0) y = y + bounds.y
+	return Cord2D(x, y)
 }
 
 fun main() = solve<Day14>()
