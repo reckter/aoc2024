@@ -314,12 +314,26 @@ fun <Node> dijkstraInt(
     getWeightBetweenNodes: (from: Node, to: Node) -> Int,
 ): Pair<List<Node>, Int> = dijkstraInt(start, isEnd = { it == end }, getNeighbors, getWeightBetweenNodes)
 
+fun <Node> dijkstraIntOrNull(
+    start: Node,
+    end: Node,
+    getNeighbors: (history: List<Node>) -> List<Node>,
+    getWeightBetweenNodes: (from: Node, to: Node) -> Int,
+): Pair<List<Node>, Int>? = dijkstraIntOrNull(start, isEnd = { it == end }, getNeighbors, getWeightBetweenNodes)
+
 fun <Node> dijkstraInt(
     start: Node,
     isEnd: (it: Node) -> Boolean,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Int,
 ): Pair<List<Node>, Int> = dijkstra(start, isEnd, 0, Int::plus, getNeighbors, getWeightBetweenNodes)
+
+fun <Node> dijkstraIntOrNull(
+    start: Node,
+    isEnd: (it: Node) -> Boolean,
+    getNeighbors: (history: List<Node>) -> List<Node>,
+    getWeightBetweenNodes: (from: Node, to: Node) -> Int,
+): Pair<List<Node>, Int>? = dijkstraOrNull(start, isEnd, 0, Int::plus, getNeighbors, getWeightBetweenNodes)
 
 fun <Node> dijkstraLong(
     start: Node,
@@ -342,7 +356,17 @@ fun <Node, Weight> dijkstra(
     add: (a: Weight, b: Weight) -> Weight,
     getNeighbors: (history: List<Node>) -> List<Node>,
     getWeightBetweenNodes: (from: Node, to: Node) -> Weight,
-): Pair<List<Node>, Weight> where Weight : Number, Weight : Comparable<Weight> {
+): Pair<List<Node>, Weight> where Weight : Number, Weight : Comparable<Weight> =
+    dijkstraOrNull(start, isEnd, zero, add, getNeighbors, getWeightBetweenNodes) ?: error("No path found")
+
+fun <Node, Weight> dijkstraOrNull(
+    start: Node,
+    isEnd: (Node) -> Boolean,
+    zero: Weight,
+    add: (a: Weight, b: Weight) -> Weight,
+    getNeighbors: (history: List<Node>) -> List<Node>,
+    getWeightBetweenNodes: (from: Node, to: Node) -> Weight,
+): Pair<List<Node>, Weight>? where Weight : Number, Weight : Comparable<Weight> {
     val queue = PriorityQueue<Pair<List<Node>, Weight>>(Comparator.comparing { it.second })
 
     val seen = mutableSetOf(start)
@@ -367,7 +391,7 @@ fun <Node, Weight> dijkstra(
                 )
             }
     }
-    error("no path found!")
+    return null
 }
 
 fun hammingDistance(
