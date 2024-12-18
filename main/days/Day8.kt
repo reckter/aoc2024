@@ -2,7 +2,7 @@ package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
 import me.reckter.aoc.allPairings
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.minus
 import me.reckter.aoc.cords.d2.plus
 import me.reckter.aoc.gcd
@@ -49,7 +49,7 @@ class Day8 : Day {
                     .flatMap { (first, second) ->
                         val distance = first - second
                         val factor = gcd(distance.x.toLong(), distance.y.toLong()).toInt()
-                        val direction = Cord2D(distance.x / factor, distance.y / factor)
+                        val direction = Coord2D(distance.x / factor, distance.y / factor)
                         val oneDirection =
                             generateSequence(first) { it + direction }
                                 .takeWhile { map.contains(it) }

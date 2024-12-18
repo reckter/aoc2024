@@ -1,10 +1,9 @@
 package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.plus
 import me.reckter.aoc.days.Day6.Direction.Top
-import me.reckter.aoc.days.Day6.Tile.Free
 import me.reckter.aoc.parseMap
 import me.reckter.aoc.solution
 import me.reckter.aoc.solve
@@ -20,12 +19,12 @@ class Day6 : Day {
     }
 
     enum class Direction(
-        val coords: Cord2D<Int>,
+        val coords: Coord2D<Int>,
     ) {
-        Top(Cord2D(0, -1)),
-        Left(Cord2D(-1, 0)),
-        Bottom(Cord2D(0, 1)),
-        Right(Cord2D(1, 0)),
+        Top(Coord2D(0, -1)),
+        Left(Coord2D(-1, 0)),
+        Bottom(Coord2D(0, 1)),
+        Right(Coord2D(1, 0)),
         ;
 
         fun turnRight(): Direction =
@@ -37,10 +36,10 @@ class Day6 : Day {
             }
     }
 
-    fun Map<Cord2D<Int>, Tile>.walkStep(
-        position: Cord2D<Int>,
+    fun Map<Coord2D<Int>, Tile>.walkStep(
+        position: Coord2D<Int>,
         direction: Direction,
-    ): Pair<Cord2D<Int>, Direction>? {
+    ): Pair<Coord2D<Int>, Direction>? {
         val nextTile = this[position + direction.coords] ?: return null
 
         if (nextTile == Tile.Obstacle) {
@@ -78,12 +77,12 @@ class Day6 : Day {
             .solution(1)
     }
 
-    fun Map<Cord2D<Int>, Tile>.hasLoop(
-        position: Cord2D<Int>,
+    fun Map<Coord2D<Int>, Tile>.hasLoop(
+        position: Coord2D<Int>,
         direction: Direction,
     ): Boolean {
-        val seen = mutableSetOf<Pair<Cord2D<Int>, Direction>>()
-        var current: Pair<Cord2D<Int>, Direction>? = position to direction
+        val seen = mutableSetOf<Pair<Coord2D<Int>, Direction>>()
+        var current: Pair<Coord2D<Int>, Direction>? = position to direction
         while (current != null) {
             seen.add(current)
             current = this.walkStep(current.first, current.second)

@@ -1,7 +1,7 @@
 package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.plus
 import me.reckter.aoc.days.Day15.Tile.Box
 import me.reckter.aoc.days.Day15.Tile.BoxLeft
@@ -12,7 +12,7 @@ import me.reckter.aoc.days.Day15.Tile.Wall
 import me.reckter.aoc.parseMap
 import me.reckter.aoc.solution
 import me.reckter.aoc.solve
-import me.reckter.aoc.splitAt
+import me.reckter.aoc.splitAtEmptyLine
 
 class Day15 : Day {
     override val day = 15
@@ -27,17 +27,17 @@ class Day15 : Day {
     }
 
     enum class Direction(
-        val vector: Cord2D<Int>,
+        val vector: Coord2D<Int>,
     ) {
-        Up(Cord2D(0, -1)),
-        Right(Cord2D(1, 0)),
-        Down(Cord2D(0, 1)),
-        Left(Cord2D(-1, 0)),
+        Up(Coord2D(0, -1)),
+        Right(Coord2D(1, 0)),
+        Down(Coord2D(0, 1)),
+        Left(Coord2D(-1, 0)),
     }
 
     val startMap by lazy {
         loadInput(trim = false)
-            .splitAt { it.isEmpty() }
+            .splitAtEmptyLine()
             .first()
             .toList()
             .parseMap {
@@ -51,7 +51,7 @@ class Day15 : Day {
             }
     }
 
-    fun Map<Cord2D<Int>, Tile>.print(robot: Cord2D<Int>) {
+    fun Map<Coord2D<Int>, Tile>.print(robot: Coord2D<Int>) {
         val minX = this.keys.minOf { it.x }
         val maxX = this.keys.maxOf { it.x }
         val minY = this.keys.minOf { it.y }
@@ -60,7 +60,7 @@ class Day15 : Day {
         (minY..maxY).forEach { y ->
             (minX..maxX).forEach { x ->
 
-                val tile = if (robot.x == x && robot.y == y) Tile.Robot else this[Cord2D(x, y)] ?: Tile.Free
+                val tile = if (robot.x == x && robot.y == y) Tile.Robot else this[Coord2D(x, y)] ?: Tile.Free
                 print(
                     when (tile) {
                         Free -> "."
@@ -78,7 +78,7 @@ class Day15 : Day {
 
     val instructions by lazy {
         loadInput(trim = false)
-            .splitAt { it.isEmpty() }
+            .splitAtEmptyLine()
             .last()
             .joinToString("")
             .map {
@@ -93,14 +93,14 @@ class Day15 : Day {
     }
 
     fun tryMove(
-        map: MutableMap<Cord2D<Int>, Tile>,
-        robot: Cord2D<Int>,
+        map: MutableMap<Coord2D<Int>, Tile>,
+        robot: Coord2D<Int>,
         direction: Direction,
-    ): Cord2D<Int> {
+    ): Coord2D<Int> {
         val next = robot + direction.vector
 
-        val queue = ArrayDeque<Cord2D<Int>>()
-        val seen = mutableSetOf<Cord2D<Int>>()
+        val queue = ArrayDeque<Coord2D<Int>>()
+        val seen = mutableSetOf<Coord2D<Int>>()
         queue.add(next)
 
         while (queue.size > 0) {
@@ -120,10 +120,10 @@ class Day15 : Day {
 
             if (map[n] == BoxLeft) {
                 queue.add(n + direction.vector)
-                queue.add(n + Cord2D(1, 0))
+                queue.add(n + Coord2D(1, 0))
             } else if (map[n] == BoxRight) {
                 queue.add(n + direction.vector)
-                queue.add(n + Cord2D(-1, 0))
+                queue.add(n + Coord2D(-1, 0))
             } else {
                 queue.add(n + direction.vector)
             }
@@ -159,12 +159,12 @@ class Day15 : Day {
     }
 
     override fun solvePart2() {
-        val dublicateDirection = Cord2D(1, 0)
+        val dublicateDirection = Coord2D(1, 0)
         val map =
             startMap
                 .entries
                 .flatMap {
-                    val pos = Cord2D(it.key.x + it.key.x, it.key.y)
+                    val pos = Coord2D(it.key.x + it.key.x, it.key.y)
                     when (it.value) {
                         Free -> listOf(pos to it.value, (pos + dublicateDirection) to it.value)
                         Box -> listOf(pos to BoxLeft, (pos + dublicateDirection) to BoxRight)

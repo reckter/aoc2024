@@ -1,7 +1,7 @@
 package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.plus
 import me.reckter.aoc.parseMap
 import me.reckter.aoc.solution
@@ -10,9 +10,9 @@ import me.reckter.aoc.solve
 class Day4 : Day {
     override val day = 4
 
-    fun Map<Cord2D<Int>, Char>.checkWordAtPosInDirection(
-        start: Cord2D<Int>,
-        direction: Cord2D<Int>,
+    fun Map<Coord2D<Int>, Char>.checkWordAtPosInDirection(
+        start: Coord2D<Int>,
+        direction: Coord2D<Int>,
         word: String,
     ): Boolean {
         var currentPos = start
@@ -25,28 +25,28 @@ class Day4 : Day {
         return true
     }
 
-    fun Map<Cord2D<Int>, Char>.checkWordAtPos(
-        start: Cord2D<Int>,
+    fun Map<Coord2D<Int>, Char>.checkWordAtPos(
+        start: Coord2D<Int>,
         word: String,
     ): Int =
         listOf(
-            Cord2D(1, 0),
-            Cord2D(0, 1),
-            Cord2D(-1, 0),
-            Cord2D(0, -1),
-            Cord2D(1, 1),
-            Cord2D(1, -1),
-            Cord2D(-1, 1),
-            Cord2D(-1, -1),
+            Coord2D(1, 0),
+            Coord2D(0, 1),
+            Coord2D(-1, 0),
+            Coord2D(0, -1),
+            Coord2D(1, 1),
+            Coord2D(1, -1),
+            Coord2D(-1, 1),
+            Coord2D(-1, -1),
         ).count { checkWordAtPosInDirection(start, it, word) }
 
-    fun Map<Cord2D<Int>, Char>.checkForPattern(
-        start: Cord2D<Int>,
+    fun Map<Coord2D<Int>, Char>.checkForPattern(
+        start: Coord2D<Int>,
         pattern: List<String>,
     ): Boolean {
         pattern.mapIndexed { y, row ->
             row.mapIndexed { x, char ->
-                if (char != ' ' && this.getOrDefault(start + Cord2D(x, y), null) != char) {
+                if (char != ' ' && this.getOrDefault(start + Coord2D(x, y), null) != char) {
                     return false
                 }
             }
@@ -54,7 +54,7 @@ class Day4 : Day {
         return true
     }
 
-    fun Map<Cord2D<Int>, Char>.checkForCross(start: Cord2D<Int>): Int {
+    fun Map<Coord2D<Int>, Char>.checkForCross(start: Coord2D<Int>): Int {
         val patterns =
             listOf(
                 """
@@ -97,7 +97,7 @@ class Day4 : Day {
             .sumOf { x ->
                 (minY..maxY)
                     .sumOf { y ->
-                        map.checkWordAtPos(Cord2D(x, y), wordToFind)
+                        map.checkWordAtPos(Coord2D(x, y), wordToFind)
                     }
             }.solution(1)
     }
@@ -118,7 +118,7 @@ class Day4 : Day {
             .sumOf { x ->
                 (minY..maxY)
                     .sumOf { y ->
-                        map.checkForCross(Cord2D(x, y))
+                        map.checkForCross(Coord2D(x, y))
                     }
             }.solution(2)
     }

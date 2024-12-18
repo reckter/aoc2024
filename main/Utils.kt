@@ -2,7 +2,7 @@ package me.reckter.aoc
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import java.io.File
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -575,12 +575,12 @@ fun <E> List<E>.nullIfEmpty(): List<E>? {
     return this
 }
 
-fun <E> List<String>.parseMap(parse: (Char) -> E): Map<Cord2D<Int>, E> =
+fun <E> List<String>.parseMap(parse: (Char) -> E): Map<Coord2D<Int>, E> =
     this
         .mapIndexed { y, line ->
             line
                 .mapIndexed { x, char ->
-                    Cord2D(x, y) to parse(char)
+                    Coord2D(x, y) to parse(char)
                 }
         }.flatten()
         .toMap()

@@ -1,7 +1,7 @@
 package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.getNeighbors
 import me.reckter.aoc.parseMap
 import me.reckter.aoc.solution
@@ -10,7 +10,7 @@ import me.reckter.aoc.solve
 class Day10 : Day {
     override val day = 10
 
-    fun Map<Cord2D<Int>, Int>.findTrails(current: Cord2D<Int>): List<List<Cord2D<Int>>> {
+    fun Map<Coord2D<Int>, Int>.findTrails(current: Coord2D<Int>): List<List<Coord2D<Int>>> {
         val height = this[current] ?: return emptyList()
         if (height == 9) return listOf(listOf(current))
 

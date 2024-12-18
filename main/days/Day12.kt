@@ -1,7 +1,7 @@
 package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.getNeighbors
 import me.reckter.aoc.cords.d2.plus
 import me.reckter.aoc.days.Day12.Direction.*
@@ -12,11 +12,11 @@ import me.reckter.aoc.solve
 class Day12 : Day {
     override val day = 12
 
-    fun Map<Cord2D<Int>, Char>.findOneRegion(start: Cord2D<Int>): Pair<Char, Set<Cord2D<Int>>> {
-        val queue = ArrayDeque<Cord2D<Int>>()
+    fun Map<Coord2D<Int>, Char>.findOneRegion(start: Coord2D<Int>): Pair<Char, Set<Coord2D<Int>>> {
+        val queue = ArrayDeque<Coord2D<Int>>()
         queue.add(start)
         val type = this[start] ?: error("outside of bounds")
-        val ret = mutableSetOf<Cord2D<Int>>()
+        val ret = mutableSetOf<Coord2D<Int>>()
         while (queue.isNotEmpty()) {
             val next = queue.removeFirst()
             if (ret.contains(next)) continue
@@ -32,9 +32,9 @@ class Day12 : Day {
         return type to ret
     }
 
-    fun Map<Cord2D<Int>, Char>.findRegions(): List<Pair<Char, Set<Cord2D<Int>>>> {
+    fun Map<Coord2D<Int>, Char>.findRegions(): List<Pair<Char, Set<Coord2D<Int>>>> {
         val map = this.toMutableMap()
-        val regions = mutableListOf<Pair<Char, Set<Cord2D<Int>>>>()
+        val regions = mutableListOf<Pair<Char, Set<Coord2D<Int>>>>()
         while (map.isNotEmpty()) {
             val start = map.keys.first()
             val region = map.findOneRegion(start)
@@ -67,17 +67,17 @@ class Day12 : Day {
     }
 
     enum class Direction(
-        val getPossibleNeighbours: (it: Cord2D<Int>) -> List<Cord2D<Int>>,
+        val getPossibleNeighbours: (it: Coord2D<Int>) -> List<Coord2D<Int>>,
     ) {
-        Up({ it -> listOf(it + Cord2D(-1, 0), it + Cord2D(1, 0)) }),
-        Left({ it -> listOf(it + Cord2D(0, -1), it + Cord2D(0, 1)) }),
-        Down({ it -> listOf(it + Cord2D(-1, 0), it + Cord2D(1, 0)) }),
-        Right({ it -> listOf(it + Cord2D(0, -1), it + Cord2D(0, 1)) }),
+        Up({ it -> listOf(it + Coord2D(-1, 0), it + Coord2D(1, 0)) }),
+        Left({ it -> listOf(it + Coord2D(0, -1), it + Coord2D(0, 1)) }),
+        Down({ it -> listOf(it + Coord2D(-1, 0), it + Coord2D(1, 0)) }),
+        Right({ it -> listOf(it + Coord2D(0, -1), it + Coord2D(0, 1)) }),
     }
 
     data class Side(
         val direction: Direction,
-        val positions: Set<Cord2D<Int>>,
+        val positions: Set<Coord2D<Int>>,
     ) {
         fun canMergeWith(other: Side): Boolean {
             if (direction != other.direction) return false
@@ -97,12 +97,12 @@ class Day12 : Day {
             )
     }
 
-    fun Cord2D<Int>.getFreeSides(region: Set<Cord2D<Int>>): List<Side> =
+    fun Coord2D<Int>.getFreeSides(region: Set<Coord2D<Int>>): List<Side> =
         listOfNotNull(
-            Side(Up, setOf(this)).takeIf { this + Cord2D(0, -1) !in region },
-            Side(Left, setOf(this)).takeIf { this + Cord2D(-1, 0) !in region },
-            Side(Down, setOf(this)).takeIf { this + Cord2D(0, 1) !in region },
-            Side(Right, setOf(this)).takeIf { this + Cord2D(1, 0) !in region },
+            Side(Up, setOf(this)).takeIf { this + Coord2D(0, -1) !in region },
+            Side(Left, setOf(this)).takeIf { this + Coord2D(-1, 0) !in region },
+            Side(Down, setOf(this)).takeIf { this + Coord2D(0, 1) !in region },
+            Side(Right, setOf(this)).takeIf { this + Coord2D(1, 0) !in region },
         )
 
     fun List<Side>.merge(): List<Side> =

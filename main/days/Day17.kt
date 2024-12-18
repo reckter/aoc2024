@@ -5,7 +5,7 @@ import me.reckter.aoc.parseWithRegex
 import me.reckter.aoc.replace
 import me.reckter.aoc.solution
 import me.reckter.aoc.solve
-import me.reckter.aoc.splitAt
+import me.reckter.aoc.splitAtEmptyLine
 import me.reckter.aoc.toIntegers
 import kotlin.math.pow
 
@@ -79,7 +79,7 @@ class Day17 : Day {
 
     val registers by lazy {
         loadInput(trim = false)
-            .splitAt { it.isEmpty() }
+            .splitAtEmptyLine()
             .first()
             .toList()
             .parseWithRegex("Register .: (\\d+)")
@@ -88,7 +88,7 @@ class Day17 : Day {
 
     val tape by lazy {
         loadInput(trim = false)
-            .splitAt { it.isEmpty() }
+            .splitAtEmptyLine()
             .last()
             .first()
             .removePrefix("Program: ")

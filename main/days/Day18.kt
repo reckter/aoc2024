@@ -2,13 +2,13 @@ package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
 import me.reckter.aoc.binarySearch
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.getNeighbors
 import me.reckter.aoc.dijkstraInt
 import me.reckter.aoc.dijkstraIntOrNull
 import me.reckter.aoc.parseWithRegex
 import me.reckter.aoc.solution
-import me.reckter.aoc.solve
+import me.reckter.aoc.timed
 
 class Day18 : Day {
     override val day = 18
@@ -17,7 +17,7 @@ class Day18 : Day {
         loadInput()
             .parseWithRegex("(\\d+),(\\d+)")
             .map { (xStr, yStr) ->
-                Cord2D(xStr.toInt(), yStr.toInt())
+                Coord2D(xStr.toInt(), yStr.toInt())
             }
     }
 
@@ -28,8 +28,8 @@ class Day18 : Day {
                 .toSet()
 
         dijkstraInt(
-            start = Cord2D(0, 0),
-            end = Cord2D(70, 70),
+            start = Coord2D(0, 0),
+            end = Coord2D(70, 70),
             getNeighbors = { it ->
                 it
                     .last()
@@ -52,9 +52,9 @@ class Day18 : Day {
                         .toSet()
 
                 dijkstraIntOrNull(
-                    start = Cord2D(0, 0),
-                    end = Cord2D(70, 70),
-                    getNeighbors = { it ->
+                    start = Coord2D(0, 0),
+                    end = Coord2D(70, 70),
+                    getNeighbors = {
                         it
                             .last()
                             .getNeighbors(noEdges = true)
@@ -72,4 +72,4 @@ class Day18 : Day {
     }
 }
 
-fun main() = solve<Day18>()
+fun main() = timed<Day18>(Day18::class.java)

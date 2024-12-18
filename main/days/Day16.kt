@@ -1,7 +1,7 @@
 package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.cords.d2.plus
 import me.reckter.aoc.days.Day16.Tile.End
 import me.reckter.aoc.days.Day16.Tile.Start
@@ -23,12 +23,12 @@ class Day16 : Day {
     }
 
     enum class Direction(
-        val vector: Cord2D<Int>,
+        val vector: Coord2D<Int>,
     ) {
-        North(Cord2D(0, -1)),
-        East(Cord2D(1, 0)),
-        South(Cord2D(0, 1)),
-        West(Cord2D(-1, 0)),
+        North(Coord2D(0, -1)),
+        East(Coord2D(1, 0)),
+        South(Coord2D(0, 1)),
+        West(Coord2D(-1, 0)),
         ;
 
         fun turnDirections(): List<Direction> =
@@ -53,7 +53,7 @@ class Day16 : Day {
             }
     }
 
-    fun getFastestPath(): Pair<List<Pair<Cord2D<Int>, Direction>>, Int> {
+    fun getFastestPath(): Pair<List<Pair<Coord2D<Int>, Direction>>, Int> {
         val start = map.entries.single { it.value == Start }.key
         return dijkstraInt(
             start = start to Direction.East,
@@ -65,7 +65,7 @@ class Day16 : Day {
                     if (previous == null || previous.second == last.second) {
                         last.second.turnDirections().map { last.first to it }
                     } else {
-                        emptyList<Pair<Cord2D<Int>, Direction>>()
+                        emptyList<Pair<Coord2D<Int>, Direction>>()
                     }
 
                 val posForward = last.first + last.second.vector
@@ -74,7 +74,7 @@ class Day16 : Day {
                     if (map[posForward] != Tile.Wall) {
                         listOf(posForward to last.second)
                     } else {
-                        emptyList<Pair<Cord2D<Int>, Direction>>()
+                        emptyList<Pair<Coord2D<Int>, Direction>>()
                     }
 
                 turns + forwardNeighbour
@@ -154,7 +154,7 @@ class Day16 : Day {
                         if (previous == null || previous.second == last.second) {
                             last.second.turnDirections().map { last.first to it }
                         } else {
-                            emptyList<Pair<Cord2D<Int>, Direction>>()
+                            emptyList<Pair<Coord2D<Int>, Direction>>()
                         }
 
                     val posForward = last.first + last.second.vector
@@ -163,7 +163,7 @@ class Day16 : Day {
                         if (map[posForward] != Tile.Wall) {
                             listOf(posForward to last.second)
                         } else {
-                            emptyList<Pair<Cord2D<Int>, Direction>>()
+                            emptyList<Pair<Coord2D<Int>, Direction>>()
                         }
 
                     turns + forwardNeighbour

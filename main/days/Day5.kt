@@ -5,7 +5,7 @@ import me.reckter.aoc.parseWithRegex
 import me.reckter.aoc.replace
 import me.reckter.aoc.solution
 import me.reckter.aoc.solve
-import me.reckter.aoc.splitAt
+import me.reckter.aoc.splitAtEmptyLine
 import me.reckter.aoc.toIntegers
 
 class Day5 : Day {
@@ -18,7 +18,7 @@ class Day5 : Day {
 
     val orderings by lazy {
         loadInput(trim = false)
-            .splitAt { it.isEmpty() }
+            .splitAtEmptyLine()
             .first()
             .toList()
             .parseWithRegex("(\\d+)\\|(\\d+)")
@@ -29,7 +29,7 @@ class Day5 : Day {
 
     val updates by lazy {
         loadInput(trim = false)
-            .splitAt { it.isEmpty() }
+            .splitAtEmptyLine()
             .last()
             .map { it.split(",").toIntegers() }
     }

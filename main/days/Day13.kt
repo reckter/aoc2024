@@ -1,21 +1,21 @@
 package me.reckter.aoc.days
 
 import me.reckter.aoc.Day
-import me.reckter.aoc.cords.d2.Cord2D
+import me.reckter.aoc.cords.d2.Coord2D
 import me.reckter.aoc.solution
 import me.reckter.aoc.solve
-import me.reckter.aoc.splitAt
+import me.reckter.aoc.splitAtEmptyLine
 
 class Day13 : Day {
     override val day = 13
 
     data class Machine(
-        val buttons: List<Pair<Int, Cord2D<Long>>>,
-        val goal: Cord2D<Long>,
+        val buttons: List<Pair<Int, Coord2D<Long>>>,
+        val goal: Coord2D<Long>,
     )
 
-    operator fun Cord2D<Long>.plus(other: Cord2D<Long>): Cord2D<Long> =
-        Cord2D(
+    operator fun Coord2D<Long>.plus(other: Coord2D<Long>): Coord2D<Long> =
+        Coord2D(
             this.x + other.x,
             this.y + other.y,
         )
@@ -55,39 +55,41 @@ class Day13 : Day {
     }
 
     val machines by lazy {
-        loadInput(trim = false).splitAt { it.isEmpty() }.map {
-            val a =
-                3 to (
-                    "Button A: X\\+(\\d+), Y\\+(\\d+)"
-                        .toRegex()
-                        .matchEntire(it.first())
-                        ?.destructured
-                        ?.let { (xStr, yStr) ->
-                            Cord2D(xStr.toLong(), yStr.toLong())
-                        } ?: error("No A Button $it")
+        loadInput(trim = false)
+            .splitAtEmptyLine()
+            .map {
+                val a =
+                    3 to (
+                        "Button A: X\\+(\\d+), Y\\+(\\d+)"
+                            .toRegex()
+                            .matchEntire(it.first())
+                            ?.destructured
+                            ?.let { (xStr, yStr) ->
+                                Coord2D(xStr.toLong(), yStr.toLong())
+                            } ?: error("No A Button $it")
+                    )
+
+                val b =
+                    1 to (
+                        "Button B: X\\+(\\d+), Y\\+(\\d+)"
+                            .toRegex()
+                            .matchEntire(it.toList()[1])
+                            ?.destructured
+                            ?.let { (xStr, yStr) ->
+                                Coord2D(xStr.toLong(), yStr.toLong())
+                            } ?: error("No B Button")
+                    )
+
+                val price =
+                    "Prize: X=(\\d+), Y=(\\d+)".toRegex().matchEntire(it.last())?.destructured?.let { (xStr, yStr) ->
+                        Coord2D(xStr.toLong(), yStr.toLong())
+                    } ?: error("no price")
+
+                Machine(
+                    listOf(a, b),
+                    price,
                 )
-
-            val b =
-                1 to (
-                    "Button B: X\\+(\\d+), Y\\+(\\d+)"
-                        .toRegex()
-                        .matchEntire(it.toList()[1])
-                        ?.destructured
-                        ?.let { (xStr, yStr) ->
-                            Cord2D(xStr.toLong(), yStr.toLong())
-                        } ?: error("No B Button")
-                )
-
-            val price =
-                "Prize: X=(\\d+), Y=(\\d+)".toRegex().matchEntire(it.last())?.destructured?.let { (xStr, yStr) ->
-                    Cord2D(xStr.toLong(), yStr.toLong())
-                } ?: error("no price")
-
-            Machine(
-                listOf(a, b),
-                price,
-            )
-        }
+            }
     }
 
     override fun solvePart1() {
@@ -98,7 +100,7 @@ class Day13 : Day {
     }
 
     override fun solvePart2() {
-        val correction = Cord2D(10000000000000L, 10000000000000L)
+        val correction = Coord2D(10000000000000L, 10000000000000L)
         machines
             .map { it.copy(goal = it.goal + correction) }
             .mapNotNull { it.findCheapestButtonPressesFast() }
