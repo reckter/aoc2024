@@ -13,6 +13,7 @@ import me.reckter.aoc.timed
 class Day18 : Day {
     override val day = 18
 
+    val size = 70
     val fallingBytes by lazy {
         loadInput()
             .parseWithRegex("(\\d+),(\\d+)")
@@ -29,14 +30,14 @@ class Day18 : Day {
 
         dijkstraInt(
             start = Coord2D(0, 0),
-            end = Coord2D(70, 70),
+            end = Coord2D(size, size),
             getNeighbors = { it ->
                 it
                     .last()
                     .getNeighbors(noEdges = true)
                     .filter { it !in brokenBytes }
-                    .filter { it.x in (0..70) }
-                    .filter { it.y in (0..70) }
+                    .filter { it.x in (0..size) }
+                    .filter { it.y in (0..size) }
             },
             getWeightBetweenNodes = { _, _ -> 1 },
         ).second
@@ -53,14 +54,14 @@ class Day18 : Day {
 
                 dijkstraIntOrNull(
                     start = Coord2D(0, 0),
-                    end = Coord2D(70, 70),
+                    end = Coord2D(size, size),
                     getNeighbors = {
                         it
                             .last()
                             .getNeighbors(noEdges = true)
                             .filter { it !in set }
-                            .filter { it.x in (0..70) }
-                            .filter { it.y in (0..70) }
+                            .filter { it.x in (0..size) }
+                            .filter { it.y in (0..size) }
                     },
                     getWeightBetweenNodes = { _, _ -> 1 },
                 ) == null
