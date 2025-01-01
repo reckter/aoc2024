@@ -394,6 +394,74 @@ fun <Node, Weight> dijkstraOrNull(
     return null
 }
 
+fun <Node> dijkstraForAllPoints(
+    start: Node,
+    getNeighbors: (history: List<Node>) -> List<Node>,
+    getWeightBetweenNodes: (from: Node, to: Node) -> Int,
+): Map<Node, Int> {
+    val queue = PriorityQueue<Pair<List<Node>, Int>>(Comparator.comparing { it.second })
+
+    val seen = mutableMapOf(start to 0)
+    queue.add(listOf(start) to 0)
+
+    while (queue.isNotEmpty()) {
+        val next = queue.remove()
+
+        getNeighbors(next.first)
+            .filter { it !in seen }
+            .forEach {
+                val cost = next.second + getWeightBetweenNodes(next.first.last(), it)
+                seen[it] = cost
+                queue.add((next.first + it) to cost)
+            }
+    }
+    return seen
+}
+
+fun <Node> dijkstraWithAllBestPaths(
+    start: Node,
+    isEnd: (Node) -> Boolean,
+    getNeighbors: (history: List<Node>) -> List<Node>,
+    getWeightBetweenNodes: (from: Node, to: Node) -> Int,
+): List<Pair<List<Node>, Int>> {
+    val queue = PriorityQueue<Pair<List<Node>, Int>>(Comparator.comparing { it.second })
+
+    val seen = mutableMapOf(start to (0 to mutableListOf<Node>()))
+    queue.add(listOf(start) to 0)
+
+    val result = mutableListOf<Pair<List<Node>, Int>>()
+    while (queue.isNotEmpty()) {
+        val next = queue.remove()
+        if (isEnd(next.first.last())) {
+            val end = next.first.last()
+            val existingSeen = seen[end] ?: (next.second to mutableListOf())
+
+            existingSeen.second.add(next.first.last())
+
+            if (result.isNotEmpty() && result[0].second != next.second) {
+                continue
+            }
+
+            result.add(next)
+        }
+        getNeighbors(next.first)
+            .filter {
+                val cost = next.second + getWeightBetweenNodes(next.first.last(), it)
+                (it !in seen || (seen[it]?.first ?: 0) == cost)
+            }.forEach {
+                val cost = next.second + getWeightBetweenNodes(next.first.last(), it)
+                val existingSeen = seen[it] ?: (cost to mutableListOf())
+
+                existingSeen.second.add(next.first.last())
+                seen[it] = existingSeen
+                queue.add(
+                    (next.first + it) to cost,
+                )
+            }
+    }
+    return result
+}
+
 fun hammingDistance(
     a: String,
     b: String,
