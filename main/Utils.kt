@@ -176,6 +176,11 @@ fun <E> List<E>.pairWithIndex(indexer: (index: Int) -> Int): List<Pair<E, E>> =
 fun <E> List<E>.pairWithIndexAndSize(indexer: (index: Int, size: Int) -> Int): List<Pair<E, E>> =
     this.mapIndexed { index, elem -> elem to this[indexer(index, this.size) % this.size] }
 
+fun <E> List<List<E>>.flipDimensions(): List<List<E>> =
+    this.first().indices.map { index ->
+        this.map { it[index] }
+    }
+
 fun <T> T.print(name: String) = this.also { println("$name: $it") }
 
 fun <T> T.solution(part: Int) {
